@@ -6,7 +6,8 @@
 #include <tuple>
 #include <QDebug>
 class QRandomGenerator;
-
+class QGraphicsView;
+class QVideoWidget;
 using Container = QWidget;
 
 class UIContainer : public QWidget
@@ -23,6 +24,10 @@ public slots:
   void generate_picture();
 
 private:
+  std::tuple<int,int,int,int> child_widget_size();
+  QVector<std::tuple<QGraphicsView *, QString>> m_picture;
+  QVector<std::tuple<QVideoWidget *, QString>> m_video;
+
   template <typename WidgetType>
   WidgetType* generate_base_widget()
     {
@@ -36,7 +41,7 @@ private:
       new_widget->show();
       return new_widget;
     }
-  std::tuple<int,int,int,int> child_widget_size();
+
 
 
 signals:
