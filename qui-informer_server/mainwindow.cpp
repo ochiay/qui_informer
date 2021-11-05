@@ -8,6 +8,7 @@
 #include <QJsonDocument>
 #include <QUdpSocket>
 
+
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
   , ui(new Ui::MainWindow)
@@ -22,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btn_generate_text, &QPushButton::clicked, ui->ui_container, &UIContainer::generate_text);
     connect(ui->btn_generate_video, &QPushButton::clicked, ui->ui_container, &UIContainer::generate_video);
     connect(ui->btn_generate_picture, &QPushButton::clicked, ui->ui_container, &UIContainer::generate_picture);
+
+    connect(ui->ui_container, &UIContainer::json_updated, ui->text_json, &QPlainTextEdit::setPlainText);
   }
 
 MainWindow::~MainWindow()
@@ -33,7 +36,7 @@ void MainWindow::send_datagram()
   {
     QByteArray buffer;
 
-    QString as_json = ui->ui_container->ui_data();
+   //! QString as_json = ui->ui_container->ui_data();
 
     m_udp_socket->writeDatagram(buffer, QHostAddress::LocalHost, 7755);
   }
@@ -44,8 +47,8 @@ void MainWindow::get_request()
 
     if (datagram.data() == "send me ui")
       {
-        QByteArray data = ui->ui_container->ui_data().toUtf8();
-        m_udp_socket->writeDatagram(data, QHostAddress::LocalHost, 7755);
+        //!QByteArray data = ui->ui_container->ui_data().toUtf8();
+        //!m_udp_socket->writeDatagram(data, QHostAddress::LocalHost, 7755);
       }
 
   }

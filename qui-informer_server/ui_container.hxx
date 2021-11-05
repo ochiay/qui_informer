@@ -5,10 +5,15 @@
 #include <QGroupBox>
 #include <tuple>
 #include <QDebug>
+#include <QJsonDocument>
+#include <QJsonObject>
+
 class QRandomGenerator;
 class QGraphicsView;
 class QVideoWidget;
+
 using Container = QWidget;
+using VideoWidget = QVideoWidget;
 
 class UIContainer : public QWidget
 {
@@ -16,17 +21,21 @@ class UIContainer : public QWidget
 public:
   UIContainer(QWidget *parent = nullptr);
 
-  QString ui_data();
+  QJsonDocument m_json;
 
 public slots:
+
   void generate_text();
   void generate_video();
   void generate_picture();
 
+signals:
+  void json_updated(QString &json_str);
+
 private:
+  QJsonObject json_obj;
+
   std::tuple<int,int,int,int> child_widget_size();
-  QVector<std::tuple<QGraphicsView *, QString>> m_picture;
-  QVector<std::tuple<QVideoWidget *, QString>> m_video;
 
   template <typename WidgetType>
   WidgetType* generate_base_widget()
@@ -42,9 +51,8 @@ private:
       return new_widget;
     }
 
+  void add_coord(QJsonObject &obj, QWidget &widget);
 
-
-signals:
 
 };
 
