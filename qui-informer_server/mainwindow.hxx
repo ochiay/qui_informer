@@ -17,11 +17,13 @@ public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
   QUdpSocket *m_udp_socket;
+
+  Ui::MainWindow *ui;
 public slots:
   void send_datagram();
   void get_request();
-private:
-  Ui::MainWindow *ui;
+
+
 };
 
 #endif // MAINWINDOW_HXX

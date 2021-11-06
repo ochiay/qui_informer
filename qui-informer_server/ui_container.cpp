@@ -1,20 +1,23 @@
 #include "ui_container.hxx"
-#include <QLabel>
-#include <QPixmap>
 
 #include <QtGlobal>
+
+#include <QLabel>
+
+#include <QFileInfo>
+#include <QUrl>
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
+#include <QPixmap>
+
 #include <QRandomGenerator>
-#include <QUrl>
 
 #include <QJsonArray>
+
 #include <QVideoWidget>
 #include <QMediaPlayer>
-
-#include <tuple>
 
 UIContainer::UIContainer(QWidget *parent) : QWidget(parent)
   {
@@ -56,7 +59,9 @@ void UIContainer::generate_text()
 //------------------------------------------------------------------------------
 void UIContainer::generate_video()
   {
-    QString filename= ".\\test.mp4";
+    //! program'closing with crash due to something's there
+    //! probably destoyng VideoWidget goes first than mediaplayer
+    QString filename= "./test.mp4";
 
     VideoWidget *video = generate_base_widget<VideoWidget> ();
     QMediaPlayer *m_player = new QMediaPlayer(this);
@@ -68,7 +73,7 @@ void UIContainer::generate_video()
 
     QJsonArray array = json_obj["videos"].toArray();
     QJsonObject obj_label;
-    obj_label["filename"] = filename;
+    obj_label["filename"] = QFileInfo(filename).absoluteFilePath();
 
     add_coord(obj_label, *video);
     array.append(obj_label);
@@ -83,7 +88,7 @@ void UIContainer::generate_video()
 //------------------------------------------------------------------------------
 void UIContainer::generate_picture()
   {
-    QString filename = ".\\test.png";
+    QString filename = "./test.png";
 
     QGraphicsView *view = generate_base_widget<QGraphicsView>();
     QGraphicsScene *scene = new QGraphicsScene;
@@ -94,14 +99,14 @@ void UIContainer::generate_picture()
 
     QJsonArray array = json_obj["videos"].toArray();
     QJsonObject obj_label;
-    obj_label["filename"] = filename;
+    obj_label["filename"] = QFileInfo(filename).absoluteFilePath();
 
     add_coord(obj_label, *view);
     array.append(obj_label);
     json_obj["videos"] = array;
     m_json.setObject(json_obj);
 
-    //! almost sam as generate_video
+    //! almost same as generate_video
 
     QString str = m_json.toJson();
     emit json_updated(str);
@@ -126,7 +131,7 @@ std::tuple<int,int,int,int> UIContainer::child_widget_size()
 void UIContainer::add_coord(QJsonObject& _obj, QWidget&widget)
   {
     _obj["x"]      = widget.x();
-    _obj["y"]      = widget.x();
+    _obj["y"]      = widget.y();
     _obj["width"]  = widget.width();
     _obj["height"] = widget.height();
   };

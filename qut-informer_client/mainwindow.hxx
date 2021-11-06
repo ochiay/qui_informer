@@ -11,14 +11,8 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class QUdpSocket;
-
-#if QT_VERSION > QT_VERSION_CHECK(5, 15 ,2)
-#include <QVideoWidget>
-#include <QMediaPlayer>
+class QVideoWidget;
 using VideoWidget = QVideoWidget;
-#else
-using VideoWidget = QWidget;
-#endif
 
 class MainWindow : public QMainWindow
 {
@@ -35,7 +29,7 @@ public:
     {
       qDebug() << "base widget created";
 
-      WidgetType *new_widget = new WidgetType(ui->groupBox);
+      WidgetType *new_widget = new WidgetType(ui->ui_container);
 
       auto w_x = json.toObject().take("x").toInt();
       auto w_y = json.toObject().take("y").toInt();

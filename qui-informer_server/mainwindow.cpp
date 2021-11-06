@@ -38,6 +38,8 @@ void MainWindow::send_datagram()
 
    //! QString as_json = ui->ui_container->ui_data();
 
+    QString as_json = ui->text_json->toPlainText();
+
     m_udp_socket->writeDatagram(buffer, QHostAddress::LocalHost, 7755);
   }
 
@@ -47,8 +49,8 @@ void MainWindow::get_request()
 
     if (datagram.data() == "send me ui")
       {
-        //!QByteArray data = ui->ui_container->ui_data().toUtf8();
-        //!m_udp_socket->writeDatagram(data, QHostAddress::LocalHost, 7755);
+        QByteArray data = ui->text_json->toPlainText().toUtf8();
+        m_udp_socket->writeDatagram(data, QHostAddress::LocalHost, 7755);
       }
 
   }
