@@ -8,6 +8,7 @@
 #include <QLabel>
 
 #include <QGraphicsView>
+#include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
 
 #include <QMediaPlayer>
@@ -48,25 +49,22 @@ void MainWindow::read_datagram()
     QNetworkDatagram datagram { m_udp_socket->receiveDatagram() };
     ui->textEdit->setText(datagram.data());
 
+    // delete graphic items
+
+    //delete_all<QGraphicsView>(this);
+
+    // doesnt work delete_all<QGraphicsPixmapItem>(this); instead:
+    // без этого куска крашится, когда удаляет graphicviews в delete_all<...>
+    //for(auto item: gr_items) delete item;
+    delete_all<QGraphicsScene>(ui->ui_container);
+    for(auto item: e_noe_views) delete item;
+    e_noe_views.clear();
+
+
     // delete media
-    QList <QMediaPlayer *> medias = this->findChildren<QMediaPlayer *>();
-    for (auto m: medias)
-      {
-        m->stop();
-        delete m;
-      }
-    medias.clear();
-
+    delete_all<QMediaPlayer>(this);
     // delete previous widgets
-    QList <QWidget *> widgets_for_delete = ui->ui_container->findChildren<QWidget *>();
-    for (auto w: widgets_for_delete)
-      delete w;
-    widgets_for_delete.clear();
-
-    QList <QGraphicsScene *> scenes = this->findChildren<QGraphicsScene *>();
-    for (auto s: scenes)
-      delete s;
-    scenes.clear();
+    delete_all<QWidget>(ui->ui_container);
 
     // make new
     QJsonParseError json_err;
@@ -110,10 +108,13 @@ void MainWindow::read_datagram()
         auto filename = picture.toObject().take("filename").toString();
 
         QGraphicsView *view = generate_base_widget<QGraphicsView>(picture);
-        QGraphicsScene *scene = new QGraphicsScene(this);
+        QGraphicsScene *scene = new QGraphicsScene(ui->ui_container);
         view->setScene(scene);
         QGraphicsPixmapItem *item = new QGraphicsPixmapItem(QPixmap(filename));
+        e_noe_scenes.push_back(scene);
+        e_noe_views.push_back(view);
         scene->addItem(item);
+
       }
 
   }

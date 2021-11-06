@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QJsonObject>
 #include "ui_mainwindow.h"
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -12,6 +13,9 @@ QT_END_NAMESPACE
 
 class QUdpSocket;
 class QVideoWidget;
+class QGraphicsPixmapItem;
+class QGraphicsView;
+class QGraphicsScene;
 using VideoWidget = QVideoWidget;
 
 class MainWindow : public QMainWindow
@@ -22,6 +26,18 @@ public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
   QUdpSocket *m_udp_socket;
+
+
+  QVector <QGraphicsScene *> e_noe_scenes;
+  QVector <QGraphicsView *> e_noe_views;
+  template <typename TypeForRemoving>
+  void delete_all(const QWidget *parent)
+    {
+      QList <TypeForRemoving *> deleting = parent->findChildren<TypeForRemoving *>();
+      for (auto d: deleting)
+        delete d;
+      deleting.clear();
+    }
 
 
   template <typename WidgetType>

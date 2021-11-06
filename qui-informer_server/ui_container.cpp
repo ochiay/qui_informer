@@ -97,13 +97,13 @@ void UIContainer::generate_picture()
     // deprecated: m_picture.push_back(std::make_tuple(view, filename));
     scene->addItem(item);
 
-    QJsonArray array = json_obj["videos"].toArray();
+    QJsonArray array = json_obj["pictures"].toArray();
     QJsonObject obj_label;
     obj_label["filename"] = QFileInfo(filename).absoluteFilePath();
 
     add_coord(obj_label, *view);
     array.append(obj_label);
-    json_obj["videos"] = array;
+    json_obj["pictures"] = array;
     m_json.setObject(json_obj);
 
     //! almost same as generate_video
